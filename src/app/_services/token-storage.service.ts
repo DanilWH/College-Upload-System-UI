@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { User } from "../_domains/user";
 
 const ACCESS_TOKEN_KEY = 'access-token';
 const REFRESH_TOKEN_KEY = 'refresh-token';
@@ -30,12 +31,12 @@ export class TokenStorageService {
         return window.localStorage.getItem(REFRESH_TOKEN_KEY);
     }
 
-    saveUser(user: any): void {                                     // TODO: change 'any' to 'User'.
+    saveUser(user: User): void {
         window.localStorage.removeItem(USER_KEY);
         window.localStorage.setItem(USER_KEY, JSON.stringify(user));
     }
 
-    getUser(): any {                                                // TODO: change 'any' to 'User'.
+    getUser(): User | null {
         const user = window.localStorage.getItem(USER_KEY);
         if (user) {
             return JSON.parse(user);

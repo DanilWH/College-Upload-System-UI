@@ -14,6 +14,10 @@ export class UserService {
     constructor(private http: HttpClient) {
     }
 
+    public getCurrent(): Observable<User> {
+        return this.http.get<User>(`${API_URL}/users/me`);
+    }
+
     public getOne(userId: number): Observable<User> {
         return this.http.get<User>(`${API_URL}/users/${userId}`);
     }
@@ -33,7 +37,4 @@ export class UserService {
     public deactivateByGroup(groupId: number): Observable<void> {
         return this.http.patch<void>(`${API_URL}/groups/${groupId}/users/status`, {});
     }
-
-
-
 }
