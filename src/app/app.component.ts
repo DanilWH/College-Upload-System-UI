@@ -12,8 +12,9 @@ import { UserService } from "./_services/user.service";
     styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-    public isLoggedIn = false;
-    public userInfo?: User | null;
+    public isLoggedIn: boolean = false;
+    public isLoginFailed: boolean = false;
+    public userLogin: string;
 
     constructor(
         private tokenStorageService: TokenStorageService,
@@ -25,7 +26,7 @@ export class AppComponent implements OnInit {
         this.isLoggedIn = !!this.tokenStorageService.getUser();
 
         if (this.isLoggedIn) {
-            this.userInfo = this.tokenStorageService.getUser();
+            this.userLogin = this.tokenStorageService.getUser().login;
         }
     }
 
@@ -34,7 +35,10 @@ export class AppComponent implements OnInit {
 
         this.authService.login(loginForm.login, loginForm.password).pipe(
             tap((loginResponse: any) => this.tokenStorageService.saveTokens(loginResponse.accessJws, loginResponse.refreshJws),
-                (errorResponse: any) => console.log("bad credentials")),
+                (errorResponse: any) => {
+                this.isLoginFailed = true;
+                console.log(errorResponse);
+            }),
             concatMap((loginResponse: any) => this.userService.getCurrent()),
             tap((currentUser: User) => {
                 this.tokenStorageService.saveUser(currentUser);
