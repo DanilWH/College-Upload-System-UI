@@ -1,21 +1,22 @@
 <section>
     <!-- Add a new group form. -->
-    <div>
+    <div *ngIf="roles.includes(userRoles.ADMIN)">
         <a class="btn btn-outline-dark my-3" data-bs-toggle="collapse" href="#collapseNewGroupForm" role="button"
            aria-expanded="false" aria-controls="collapseNewGroupForm">Добавить новую группу</a>
 
         <div class="collapse" id="collapseNewGroupForm">
-            <form id="newGroupForm" name="form" [formGroup]="groupOfStudentsForm" (ngSubmit)="onSubmit()" novalidate>
+            <form id="newGroupForm" name="form" #f="ngForm" (ngSubmit)="onSubmit()" novalidate>
                 <!-- Group name. -->
                 <div class="row mb-3">
                     <label for="groupName" class="col-sm-1 col-form-label">Имя группы</label>
                     <div class="col-sm-3">
-                        <input id="groupName" class="form-control" type="text" formControlName="name"
-                               [ngClass]="{ 'is-invalid': f.name.touched && f.name.invalid }" />
-                        <div *ngIf="f.name.touched && f.name.invalid" class="invalid-feedback">
-                            <div *ngIf="f.name.errors?.required">Поле должно быть заполнено</div>
-                            <div *ngIf="f.name.errors?.minlength">Поле должно содержать не менее 3 символа.</div>
-                            <div *ngIf="f.name.errors?.maxlength">Поле должно содержать не более 6 символов.</div>
+                        <input id="groupName" class="form-control" type="text" name="name" required="required" minlength="3" maxlength="6"
+                               [(ngModel)]="groupForm.name" #name="ngModel"
+                               [ngClass]="{ 'is-invalid': name.touched && name.invalid }" />
+                        <div *ngIf="name.touched && name.invalid" class="invalid-feedback">
+                            <div *ngIf="name.errors.required">Поле должно быть заполнено</div>
+                            <div *ngIf="name.errors.minlength">Поле должно содержать не менее 3 символа.</div>
+                            <div *ngIf="name.errors.maxlength">Поле должно содержать не более 6 символов.</div>
                         </div>
                     </div>
                 </div>
@@ -24,24 +25,24 @@
                 <div class="row mb-3">
                     <label for="fileId" class="col-sm-1 col-form-label">CSV файл</label>
                     <div class="col-sm-3">
-                        <input id="fileId" class="form-control" type="file" required="required" accept=".csv"
-                               formcontrolName="csvFile" (change)="onFileChange($event)"
-                               [ngClass]="{ 'is-invalid': f.csvFile.touched && f.csvFile.invalid }" />
-                        <div *ngIf="f.csvFile.touched && f.csvFile.invalid" class="invalid-feedback">
-                            <div *ngIf="f.csvFile.errors?.required">Выберите файл.</div>
+                        <input id="fileId" class="form-control" type="file" name="file" required="required" accept=".csv"
+                               #file="ngModel" ngModel (change)="onFileChange($event)"
+                               [ngClass]="{ 'is-invalid': file.touched && file.invalid}" />
+                        <div *ngIf="file.touched && file.invalid" class="invalid-feedback">
+                            <div *ngIf="file.errors.required">Выберите файл.</div>
                         </div>
                     </div>
                 </div>
 
-                <button id="newGroupButton" class="btn btn-dark" type="submit" [disabled]="groupOfStudentsForm.invalid">Создать</button>
+                <button id="newGroupButton" class="btn btn-dark" type="submit" [disabled]="f.invalid">Создать</button>
             </form>
         </div>
     </div>
 
     <!-- Table content. -->
-        <div class="list-group mt-3">
-            <a class="list-group-item list-group-item-action" *ngFor="let group of groups">{{ group.name }}</a>
-        </div>
+    <div class="list-group mt-3">
+        <a class="list-group-item list-group-item-action" *ngFor="let group of groups">{{ group.name }}</a>
+    </div>
 
 <!--
         <script>

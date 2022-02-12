@@ -5,6 +5,8 @@ import { concatMap, mergeMap, tap } from "rxjs/operators";
 import { UserService } from "../_services/user.service";
 import { Group } from "../_domains/group";
 import { User } from "../_domains/user";
+import { TokenStorageService } from "../_services/token-storage.service";
+import { UserRoles } from "../_domains/user.roles";
 
 @Component({
     selector: 'app-group',
@@ -12,52 +14,48 @@ import { User } from "../_domains/user";
     styleUrls: ['./group.component.css']
 })
 export class GroupComponent implements OnInit {
-    public groupOfStudentsForm = this.fb.group({
-        name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(6)]],
-        csvFile: ['', [Validators.required]]
-    });
-
+    private csvFile: any;
+    public groupForm: Group = {
+        id: null,
+        name: ''
+    };
     public groups: Group[] = [];
+    public roles: UserRoles[] = [];
+    public userRoles = UserRoles; // Make a variable reference to enum with roles
 
-    constructor(
-        private groupService: GroupService,
-        private userService: UserService,
-        private fb: FormBuilder
-    ) { }
+    constructor(private groupService: GroupService, private userService: UserService, private fb: FormBuilder,
+                private tokenStorageService: TokenStorageService) { }
 
     ngOnInit(): void {
+        // load the list of all the active groups.
         this.groupService.list().subscribe(
             (data: Group[]) => {
                 this.groups = data;
             }
         );
+
+        const user = this.tokenStorageService.getUser();
+        if (user) {
+            this.roles = user.roles;
+        }
     }
 
     public onSubmit(): void {
         const formData = new FormData();
-        formData.append('csvFile', this.groupOfStudentsForm.get('csvFile')?.value);
+        formData.append('csvFile', this.csvFile);
 
-        const newGroupForm: Group = {name: this.groupOfStudentsForm.get('name')?.value} as Group;
-        this.groupService.create(newGroupForm).pipe(
+        this.groupService.create(this.groupForm).pipe(
             tap((newGroup: Group) => this.groups.push(newGroup)),
             concatMap((newGroup: Group) => this.userService.generateForGroup(newGroup.id, formData)),
             tap((generatedUsers: User[]) => console.log(generatedUsers))
         ).subscribe();
     }
 
-    get f() {
-        return this.groupOfStudentsForm.controls;
-    }
-
     public onFileChange(event: any) {
         if (event.target.files.length > 0) {
-            this.groupOfStudentsForm.patchValue({
-                csvFile: event.target.files[0]
-            });
+            this.csvFile = event.target.files[0];
         } else {
-            this.groupOfStudentsForm.patchValue({
-                csvFile: ''
-            })
+            this.csvFile = null;
         }
     }
 }
