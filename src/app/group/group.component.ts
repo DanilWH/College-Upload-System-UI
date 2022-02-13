@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from "@angular/forms";
 import { GroupService } from "../_services/group.service";
 import { concatMap, mergeMap, tap } from "rxjs/operators";
 import { UserService } from "../_services/user.service";
@@ -7,6 +7,8 @@ import { Group } from "../_domains/group";
 import { User } from "../_domains/user";
 import { TokenStorageService } from "../_services/token-storage.service";
 import { UserRoles } from "../_domains/user.roles";
+
+declare var showToast: any;
 
 @Component({
     selector: 'app-group',
@@ -22,6 +24,8 @@ export class GroupComponent implements OnInit {
     public groups: Group[] = [];
     public roles: UserRoles[] = [];
     public userRoles = UserRoles; // Make a variable reference to enum with roles
+
+    public isGenerating = false;
 
     constructor(private groupService: GroupService, private userService: UserService, private fb: FormBuilder,
                 private tokenStorageService: TokenStorageService) { }
@@ -40,14 +44,21 @@ export class GroupComponent implements OnInit {
         }
     }
 
-    public onSubmit(): void {
+    public onSubmit(ngForm: NgForm): void {
+        this.isGenerating = true;
+
         const formData = new FormData();
         formData.append('csvFile', this.csvFile);
 
         this.groupService.create(this.groupForm).pipe(
             tap((newGroup: Group) => this.groups.push(newGroup)),
             concatMap((newGroup: Group) => this.userService.generateForGroup(newGroup.id, formData)),
-            tap((generatedUsers: User[]) => console.log(generatedUsers))
+            tap((generatedUsers: User[]) => {
+                this.isGenerating = false;
+                new showToast();
+                ngForm.reset();
+                console.log(generatedUsers)
+            })
         ).subscribe();
     }
 
