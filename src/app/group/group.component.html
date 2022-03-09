@@ -13,6 +13,8 @@
                         <input id="groupName" class="form-control" type="text" name="name" required="required" minlength="3" maxlength="6"
                                [(ngModel)]="groupForm.name" #name="ngModel"
                                [ngClass]="{ 'is-invalid': name.touched && name.invalid }" />
+
+                        <!-- errors. -->
                         <div *ngIf="name.touched && name.invalid" class="invalid-feedback">
                             <div *ngIf="name.errors.required">Поле должно быть заполнено</div>
                             <div *ngIf="name.errors.minlength">Поле должно содержать не менее 3 символа.</div>
@@ -28,13 +30,15 @@
                         <input id="fileId" class="form-control" type="file" name="file" required="required" accept=".csv"
                                #file="ngModel" ngModel (change)="onFileChange($event)"
                                [ngClass]="{ 'is-invalid': file.touched && file.invalid}" />
+
+                        <!-- errors. -->
                         <div *ngIf="file.touched && file.invalid" class="invalid-feedback">
                             <div *ngIf="file.errors.required">Выберите файл.</div>
                         </div>
                     </div>
                 </div>
 
-                <button id="liveToastBtn" class="btn btn-dark" type="submit" [disabled]="f.invalid || isGenerating">
+                <button class="btn btn-dark" type="submit" [disabled]="f.invalid || isGenerating">
                     <span *ngIf="!isGenerating">Создать</span>
                     <span *ngIf="isGenerating" >
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -44,7 +48,7 @@
 
                 <!-- The notification. -->
                 <div class="position-fixed top-0 start-50 translate-middle-x mt-4" style="z-index: 11">
-                    <div id="liveToast" class="toast text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div id="successfulGenerationToast" class="toast text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
                         <div class="toast-header">
                             <strong class="me-auto">Уведомление</strong>
                             <small>Только что</small>

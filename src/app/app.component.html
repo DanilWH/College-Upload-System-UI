@@ -29,8 +29,8 @@
                 <ul class="navbar-nav" *ngIf="isLoggedIn">
                     <!-- Open the user's profile. -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#"> <!-- TODO implement user profile. -->
-                            <span>{{ userLogin }}</span>
+                        <a class="nav-link" href="#" routerLink="profile/{{ user.id }}">
+                            <span>{{ user.login }}</span>
                         </a>
                     </li>
                     <!-- Logout button. -->

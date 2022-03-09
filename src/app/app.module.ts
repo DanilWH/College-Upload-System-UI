@@ -7,11 +7,13 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { GroupComponent } from './group/group.component';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AuthInterceptor } from "./_helpers/auth.interceptor";
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    GroupComponent
+    GroupComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

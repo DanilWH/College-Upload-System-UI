@@ -14,7 +14,7 @@ import { UserService } from "./_services/user.service";
 export class AppComponent implements OnInit {
     public isLoggedIn: boolean = false;
     public isLoginFailed: boolean = false;
-    public userLogin: string;
+    public user: User;
 
     constructor(
         private tokenStorageService: TokenStorageService,
@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
         this.isLoggedIn = !!this.tokenStorageService.getUser();
 
         if (this.isLoggedIn) {
-            this.userLogin = this.tokenStorageService.getUser().login;
+            this.user = this.tokenStorageService.getUser();
         }
     }
 

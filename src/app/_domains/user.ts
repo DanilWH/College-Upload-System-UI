@@ -6,6 +6,8 @@ export interface User {
     lastName: string;
     fatherName: string;
     login: string;
+    password: string;
+    confirmPassword: string;
     roles: UserRoles[];
     groupId: number;
 }

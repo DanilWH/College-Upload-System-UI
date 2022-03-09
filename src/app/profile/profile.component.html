@@ -1,0 +1,183 @@
+<section>
+    <!-- Content. -->
+    <form name="profile" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+        <!-- First name. -->
+        <div class="mb-3 row">
+            <label for="firstName_id" class="col-sm-2 col-form-label">Имя пользователя</label>
+            <div class="col-sm-3">
+                <input id="firstName_id" class="form-control" type="text" name="firstName"  required="required" minlength="2" maxlength="50"
+                       [(ngModel)]="profile.firstName" #firstName="ngModel"
+                       [ngClass]="{ 'is-invalid': firstName.touched && firstName.invalid }"
+                       [disabled]="!roles.includes(userRoles.ADMIN)" />
+
+                <!-- errors. -->
+                <div *ngIf="firstName.touched && firstName.invalid" class="invalid-feedback">
+                    <div *ngIf="firstName.errors.required">Поле должно быть заполнено</div>
+                    <div *ngIf="firstName.errors.minlength">Поле должно содержать не менее 2 символа.</div>
+                    <div *ngIf="firstName.errors.maxlength">Поле должно содержать не более 50 символов.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Last name. -->
+        <div class="mb-3 row">
+            <label for="lastName_id" class="col-sm-2 col-form-label">Фамилия пользователя</label>
+            <div class="col-sm-3">
+                <input id="lastName_id" class="form-control" type="text" name="lastName" required="required" minlength="2" maxlength="50"
+                       [(ngModel)]="profile.lastName" #lastName="ngModel"
+                       [ngClass]="{ 'is-invalid': lastName.touched && lastName.invalid }"
+                       [disabled]="!roles.includes(userRoles.ADMIN)" />
+
+                <!-- errors. -->
+                <div *ngIf="lastName.touched && lastName.invalid" class="invalid-feedback">
+                    <div *ngIf="lastName.errors.required">Поле должно быть заполнено</div>
+                    <div *ngIf="lastName.errors.minlength">Поле должно содержать не менее 2 символа.</div>
+                    <div *ngIf="lastName.errors.maxlength">Поле должно содержать не более 50 символов.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Father name. -->
+        <div class="mb-3 row">
+            <label for="fatherName_id" class="col-sm-2 col-form-label">Отчество пользователя</label>
+            <div class="col-sm-3">
+                <input id="fatherName_id" class="form-control" type="text" name="fatherName" required="required" minlength="4" maxlength="50"
+                       [(ngModel)]="profile.fatherName" #fatherName="ngModel"
+                       [ngClass]="{ 'is-invalid': fatherName.touched && fatherName.invalid }"
+                       [disabled]="!roles.includes(userRoles.ADMIN)" />
+
+                <!-- errors. -->
+                <div *ngIf="fatherName.touched && fatherName.invalid" class="invalid-feedback">
+                    <div *ngIf="fatherName.errors.required">Поле должно быть заполнено</div>
+                    <div *ngIf="fatherName.errors.minlength">Поле должно содержать не менее 4 символа.</div>
+                    <div *ngIf="fatherName.errors.maxlength">Поле должно содержать не более 50 символов.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login. -->
+        <div class="mb-3 row">
+            <label for="login_id" class="col-sm-2 col-form-label">Логин</label>
+            <div class="col-sm-3">
+                <input id="login_id" class="form-control" type="text" name="login" required="required" minlength="1" maxlength="60" autofocus="autofocus"
+                       [(ngModel)]="profile.login" #login="ngModel"
+                       [ngClass]="{ 'is-invalid': login.touched && login.invalid }"/>
+
+                <!-- errors. -->
+                <div *ngIf="login.touched && login.invalid" class="invalid-feedback">
+                    <div *ngIf="login.errors.required">Поле должно быть заполнено</div>
+                    <div *ngIf="login.errors.minlength">Поле должно содержать не менее 1 символа.</div>
+                    <div *ngIf="login.errors.maxlength">Поле должно содержать не более 60 символов.</div>
+                </div>
+            </div>
+            <div class="form-text">
+                <ul>
+                    <!-- TODO implement the rules checking. -->
+                    <li>Логин может состоять из латинских и/или русских симолов верхнего и/или нижнего регистра</li>
+                    <li>Логин может содержать цифры</li>
+                    <li>Логин может содержать символы @/-/+/_/./\</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Password. -->
+        <button type="button" id="password_change_button" class="btn btn-outline-secondary" (click)="togglePasswordChanging()">Изменить пароль</button>
+        <div class="mb-3 row">
+            <label for="password_id" class="col-sm-2 col-form-label">Новый пароль</label>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <input id="password_id" class="form-control" type="password" name="password" required="required" minlength="8" maxlength="30"
+                           [(ngModel)]="profile.password" #password="ngModel" (input)="onPasswordsInput()"
+                           [ngClass]="{ 'is-invalid': !passwordsMatch || (password.touched && password.invalid) }"
+                           [disabled]="!isPasswordBeingChanged" />
+
+                    <!-- errors. -->
+                    <div *ngIf="password.touched && password.invalid" class="invalid-feedback">
+                        <div *ngIf="password.errors.required">Поле должно быть заполнено</div>
+                        <div *ngIf="password.errors.minlength">Поле должно содержать не менее 8 символа.</div>
+                        <div *ngIf="password.errors.maxlength">Поле должно содержать не более 60 символов.</div>
+                    </div>
+                </div>
+            </div>
+            <small class="form-text">
+                <ul>
+                    <!-- TODO implement the rules checking. -->
+                    <li>длина пароля должна быть от 8 до 30 символов</li>
+                    <li>пароль должен содержать хотя бы один символ латинского алфавита</li>
+                    <li>пароль должен содержать хотя бы одну цифру</li>
+                    <li>пароль не должен содержать пробелов</li>
+                </ul>
+            </small>
+        </div>
+
+        <!-- Confirm the password. -->
+        <div class="mb-3 row">
+            <label for="confirmPassword_id" class="col-sm-2 col-form-label">Повторите пароль</label>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <input id="confirmPassword_id" class="form-control" type="password" name="confirmPassword" required="required" minlength="8" maxlength="30"
+                           [(ngModel)]="profile.confirmPassword" #confirmPassword="ngModel" (input)="onPasswordsInput()"
+                           [ngClass]="{ 'is-invalid': !passwordsMatch || (confirmPassword.touched && confirmPassword.invalid) }"
+                           [disabled]="!isPasswordBeingChanged" />
+
+                    <!-- errors. -->
+                    <div *ngIf="confirmPassword.touched && confirmPassword.invalid" class="invalid-feedback">
+                        <div *ngIf="!passwordsMatch">Пароли не совпадают.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-dark" type="submit">Изменить</button>
+    </form>
+
+<!--
+    <script>
+        const eyes = document.querySelectorAll(".password_eye");
+        let isEyePressed = false;
+        let isPasswordToggled = false;
+
+        eyes.forEach( e => {
+            e.addEventListener("mousedown", OnEyePressed);
+            e.addEventListener("mouseup", OnEyePressReleased);
+        });
+
+        function OnEyePressed(e) {
+            const inputField = getPreviousSiblingInputNode(e.target);
+            changePasswordInputFieldType(inputField);
+            changeEyeIcon(e.target);
+        }
+
+        function OnEyePressReleased(e) {
+            const inputField = getPreviousSiblingInputNode(e.target);
+            changePasswordInputFieldType(inputField);
+            changeEyeIcon(e.target);
+        }
+
+        function changeEyeIcon(eye) {
+            console.log(1);
+            eye.src = (isEyePressed ? "/img/eye.svg" : "/img/PressedEye.svg");
+
+            isEyePressed = !isEyePressed;
+        }
+
+        const changePasswordInputFieldType = (e) =>
+            e.type = (e.type === "password" ? "text" : "password");
+
+        function getPreviousSiblingInputNode(element) {
+            if(element == null)
+                return false;
+
+            if(element.nodeName	=== "input".toUpperCase())
+                return element;
+
+            return getPreviousSiblingInputNode(element.previousSibling);
+        }
+
+        function togglePasswordChanging() {
+            document.querySelectorAll("input[type='password']").forEach( e => e.attributes.removeNamedItem("disabled") );
+            document.querySelectorAll("input[type='password']").forEach( e => e.attributes.setNamedItem(document.createAttribute("required")) );
+        }
+    </script>
+-->
+</section>
