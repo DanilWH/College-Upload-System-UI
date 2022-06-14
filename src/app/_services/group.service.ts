@@ -14,8 +14,12 @@ export class GroupService {
     constructor(private http: HttpClient) {
     }
 
-    public list(): Observable<Group[]> {
-        return this.http.get<Group[]>(`${API_URL}/groups`);
+    public listActive(): Observable<Group[]> {
+        return this.http.get<Group[]>(`${API_URL}/groups?isActive=true`);
+    }
+
+    public listArchived(): Observable<Group[]> {
+        return this.http.get<Group[]>(`${API_URL}/groups?isActive=false`);
     }
 
     public create(group: Group): Observable<Group> {

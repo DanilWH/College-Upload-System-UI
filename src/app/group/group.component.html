@@ -66,6 +66,11 @@
 
     <!-- Table content. -->
     <div class="list-group mt-3">
-        <a class="list-group-item list-group-item-action" *ngFor="let group of groups">{{ group.name }}</a>
+        <a class="list-group-item list-group-item-action" *ngFor="let group of activeGroups">{{ group.name }}</a>
+    </div>
+
+    <h5 class="mt-3"><small class="text-muted">Группы прошлых лет </small></h5>
+    <div class="list-group mt-3">
+        <a class="list-group-item list-group-item-action" *ngFor="let group of archivedGroups">{{ group.name }}</a>
     </div>
 </section>

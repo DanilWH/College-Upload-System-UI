@@ -36,7 +36,7 @@ export class ProfileComponent implements OnInit {
         // load up the current user's roles;
         const user = this.tokenStorageService.getUser();
         if (user) {
-            this.roles = user.roles;
+            this.roles = user.userRoles;
         }
     }
 

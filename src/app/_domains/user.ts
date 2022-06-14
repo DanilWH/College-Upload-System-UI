@@ -8,6 +8,6 @@ export interface User {
     login: string;
     password: string;
     confirmPassword: string;
-    roles: UserRoles[];
+    userRoles: UserRoles[];
     groupId: number;
 }

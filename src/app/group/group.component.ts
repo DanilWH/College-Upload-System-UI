@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from "@angular/forms";
+import { FormBuilder, NgForm } from "@angular/forms";
 import { GroupService } from "../_services/group.service";
-import { concatMap, mergeMap, tap } from "rxjs/operators";
+import { concatMap, tap } from "rxjs/operators";
 import { UserService } from "../_services/user.service";
 import { Group } from "../_domains/group";
 import { User } from "../_domains/user";
@@ -21,7 +21,8 @@ export class GroupComponent implements OnInit {
         id: null,
         name: ''
     };
-    public groups: Group[] = [];
+    public activeGroups: Group[] = [];
+    public archivedGroups: Group[] = [];
     public roles: UserRoles[] = [];
     public userRoles = UserRoles; // Make a variable reference to enum with roles
 
@@ -31,16 +32,23 @@ export class GroupComponent implements OnInit {
                 private tokenStorageService: TokenStorageService) { }
 
     ngOnInit(): void {
-        // load the list of all the active groups.
-        this.groupService.list().subscribe(
+        // load the list of all of the active groups.
+        this.groupService.listActive().subscribe(
             (data: Group[]) => {
-                this.groups = data;
+                this.activeGroups = data;
+            }
+        );
+
+        // load the list of all of the archived groups.
+        this.groupService.listArchived().subscribe(
+            (data: Group[]) => {
+                this.archivedGroups = data;
             }
         );
 
         const user = this.tokenStorageService.getUser();
         if (user) {
-            this.roles = user.roles;
+            this.roles = user.userRoles;
         }
     }
 
@@ -51,13 +59,12 @@ export class GroupComponent implements OnInit {
         formData.append('csvFile', this.csvFile);
 
         this.groupService.create(this.groupForm).pipe(
-            tap((newGroup: Group) => this.groups.push(newGroup)),
+            tap((newGroup: Group) => this.activeGroups.push(newGroup)),
             concatMap((newGroup: Group) => this.userService.generateForGroup(newGroup.id, formData)),
             tap((generatedUsers: User[]) => {
                 this.isGenerating = false;
                 new showToast();
                 ngForm.reset();
-                console.log(generatedUsers)
             })
         ).subscribe();
     }
