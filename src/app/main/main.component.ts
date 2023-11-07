@@ -12,10 +12,10 @@ declare var showToast: any;
 
 @Component({
     selector: 'app-group',
-    templateUrl: './group.component.html',
-    styleUrls: ['./group.component.css']
+    templateUrl: './main.component.html',
+    styleUrls: ['./main.component.css']
 })
-export class GroupComponent implements OnInit {
+export class MainComponent implements OnInit {
     private csvFile: any;
     public groupForm: Group = {
         id: null,

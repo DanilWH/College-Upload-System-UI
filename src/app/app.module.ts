@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
-import { GroupComponent } from './group/group.component';
+import { MainComponent } from './main/main.component';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AuthInterceptor } from "./_helpers/auth.interceptor";
 import { ProfileComponent } from './profile/profile.component';
@@ -12,7 +12,7 @@ import { ProfileComponent } from './profile/profile.component';
 @NgModule({
   declarations: [
     AppComponent,
-    GroupComponent,
+    MainComponent,
     ProfileComponent
   ],
   imports: [
