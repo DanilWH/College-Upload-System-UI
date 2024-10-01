@@ -14,6 +14,10 @@ export class GroupService {
     constructor(private http: HttpClient) {
     }
 
+    public get(groupId: number): Observable<Group> {
+        return this.http.get<Group>(`${API_URL}/groups/${groupId}`);
+    }
+
     public listActive(): Observable<Group[]> {
         return this.http.get<Group[]>(`${API_URL}/groups?isActive=true`);
     }

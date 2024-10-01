@@ -8,12 +8,14 @@ import { MainComponent } from './main/main.component';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AuthInterceptor } from "./_helpers/auth.interceptor";
 import { ProfileComponent } from './profile/profile.component';
+import { GroupComponent } from './group/group.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainComponent,
-    ProfileComponent
+    ProfileComponent,
+    GroupComponent
   ],
   imports: [
     BrowserModule,
